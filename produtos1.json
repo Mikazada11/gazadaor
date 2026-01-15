@@ -1,0 +1,101 @@
+[
+    {
+        "id": "pack_10_coins",
+        "name": "10 COINS",
+        "category": "coins",
+        "price_coins": 9.99,
+        "image": "images\/10coins.png",
+        "description": "Pack de moedas para ve\u00edculos.",
+        "features": "Moedas para usar na loja vip dentro do servidor"
+    },
+    {
+        "id": "pack_25_coins",
+        "name": "25 COINS",
+        "category": "coins",
+        "price_coins": 20.99,
+        "image": "images\/25coins.png",
+        "description": "Pack de moedas para ve\u00edculos.",
+        "features": "Moedas para usar na loja vip dentro do servidor"
+    },
+    {
+        "id": "pack_50_coins",
+        "name": "50 COINS",
+        "category": "coins",
+        "price_coins": 42.99,
+        "image": "images\/50coins.png",
+        "description": "Pack de moedas para ve\u00edculos.",
+        "features": "Moedas para usar na loja vip dentro do servidor"
+    },
+    {
+        "id": "pack_100_coins",
+        "name": "100 COINS",
+        "category": "coins",
+        "price_coins": 90.99,
+        "image": "images\/100coins.png",
+        "description": "Pack de moedas para ve\u00edculos.",
+        "features": "Moedas para usar na loja vip dentro do servidor"
+    },
+    {
+        "id": "vip_diamante",
+        "name": "VIP DIAMANTE",
+        "category": "vip_mensal",
+        "price_coins": 9.9,
+        "image": "images\/vipdiamante.png",
+        "description": "O status m\u00e1ximo da cidade.",
+        "features": "invent\u00e1rio +130KG\n90K sal\u00e1rio VIP\nMenu radial VIP(limpar\/arranjar carro)\n1 mochila VIP"
+    },
+    {
+        "id": "vip_gazada",
+        "name": "VIP GAZADA",
+        "category": "vip_mensal",
+        "price_coins": 12.5,
+        "image": "images\/vipgazada.png",
+        "description": "O status m\u00e1ximo da cidade.",
+        "features": "Invent\u00e1rio +230KG\n135K sal\u00e1rio VIP\nPenthouse VIP\nMenu Radial VIP(limpar\/arranjar carro e mudar de roupa)\n10 radio VIP\n10k fichas casino\n100 joias raras"
+    },
+    {
+        "id": "vip_dezembro",
+        "name": "VIP DEZEMBRO",
+        "category": "vip_exclusivo",
+        "price_coins": 25,
+        "image": "images\/vipdezembro.png",
+        "description": "Vantagens exclusivas de Natal.",
+        "features": "60 coins\n18M\n5 radios VIP\nveiculo exclusivo"
+    },
+    {
+        "id": "golf2",
+        "name": "GOLF 2",
+        "category": "vip_exclusivo",
+        "price_coins": 55.6,
+        "image": "images\/golf2exclusivo.png",
+        "description": "Pot\u00eancia e ronco \u00fanico.",
+        "features": "60 coins\n105M\nBrickade VIP de 130k KG\n5 radios VIP\n200 joias raras\n200k fichas de casino\nveiculo exclusivo"
+    },
+    {
+        "id": "mustang_gt",
+        "name": "MUSTANG GT",
+        "category": "vip_exclusivo",
+        "price_coins": 22.5,
+        "image": "images\/mustanggt.png",
+        "description": "Pot\u00eancia e ronco \u00fanico.",
+        "features": "100 joias raras\n50M\n1 mochila VIP\n50 coins\nBrickade VIP 130k KG(ou 25 coins)\ncarro exclusivo"
+    },
+    {
+        "id": "vip_janeiro",
+        "name": "VIP JANEIRO",
+        "category": "vip_exclusivo",
+        "price_coins": 37.9,
+        "image": "images\/exclusivojaneiro.png",
+        "description": "Pot\u00eancia e ronco \u00fanico.",
+        "features": "80 coins\n65M\nraptor 200k KG\n5 radios VIP\n veiculo exclusivo"
+    },
+    {
+        "id": "galinha_vip",
+        "name": "GALINHA VIP",
+        "category": "extras",
+        "price_coins": 30,
+        "image": "images\/galinha.png",
+        "description": "Uma galinha para melhorar a tua experi\u00eancia.",
+        "features": "120 KG de mochila extra"
+    }
+]

@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>GAZADA • Compras</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#070707;
+      --panel: rgba(255,255,255,.06);
+      --stroke: rgba(255,255,255,.10);
+      --text:#fff;
+      --muted: rgba(255,255,255,.65);
+      --red:#c00000;
+      --shadow: 0 18px 50px rgba(0,0,0,.45);
+      --radius: 18px;
+    }
+    *{ box-sizing:border-box; font-family:Poppins, system-ui, Segoe UI, Roboto, Arial; }
+    body{ margin:0; background:var(--bg); color:var(--text); overflow-x:hidden; }
+
+    .bg{
+      position:fixed; inset:0; pointer-events:none; z-index:-1;
+      background:
+        radial-gradient(900px 520px at 20% 0%, rgba(192,0,0,.22), rgba(0,0,0,0) 55%),
+        radial-gradient(900px 520px at 80% 10%, rgba(255,42,42,.12), rgba(0,0,0,0) 55%),
+        linear-gradient(rgba(0,0,0,.75), rgba(0,0,0,.92));
+    }
+
+    .topbar{
+      position:fixed; top:0; left:0; right:0; height:72px;
+      padding:20px 60px; display:flex; align-items:center; justify-content:space-between;
+      background:rgba(0,0,0,.6); backdrop-filter: blur(6px); border-bottom:1px solid rgba(255,255,255,.06);
+      z-index:10;
+    }
+    .logo img{ max-height:64px; }
+    .nav a{ color:#fff; text-decoration:none; margin-left:16px; font-size:14px; }
+    .nav a:hover{ color:#ff2a2a; }
+
+    .wrap{ width:min(1100px,100%); margin:0 auto; padding:120px 20px 40px; }
+    .kicker{ font-size:12px; letter-spacing:4px; color:var(--red); margin-bottom:12px; display:inline-block; }
+    h1{ margin:0 0 10px; font-size:48px; letter-spacing:1px; }
+    .sub{ color:var(--muted); font-size:14px; line-height:1.8; max-width:760px; }
+
+    .grid{ display:grid; grid-template-columns: 1.1fr .9fr; gap:18px; margin-top:26px; }
+    @media (max-width:980px){ .grid{ grid-template-columns:1fr; } }
+
+    .card{
+      background: var(--panel);
+      border:1px solid var(--stroke);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+
+    label{ display:block; font-size:12px; color:var(--muted); margin:10px 0 6px; }
+    input, select{
+      width:100%;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.22);
+      color:#fff;
+      outline:none;
+    }
+
+    .row{ display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
+    @media (max-width:600px){ .row{ grid-template-columns:1fr; } }
+
+    .btn{
+      width:100%;
+      padding: 14px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(192,0,0,.75);
+      background: rgba(192,0,0,.14);
+      color:#fff;
+      cursor:pointer;
+      transition: transform .15s ease, background .15s ease;
+      margin-top:14px;
+      font-weight:700;
+    }
+    .btn:hover{ transform: translateY(-1px); background: rgba(192,0,0,.22); }
+
+    .line{ display:flex; justify-content:space-between; gap:10px; padding:10px 0; border-bottom:1px solid rgba(255,255,255,.08); font-size:13px; }
+    .total{ display:flex; justify-content:space-between; align-items:baseline; padding-top:12px; }
+    .total .val{ font-size:28px; font-weight:900; }
+    .hint{ color:var(--muted); font-size:12px; line-height:1.7; margin-top:10px; }
+    .error{ color:#ffb3b3; font-size:12px; display:none; margin-top:10px; }
+    .error.show{ display:block; }
+    .ok{ color:#b6ffd2; font-size:12px; display:none; margin-top:10px; white-space:pre-line; }
+    .ok.show{ display:block; }
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono"; }
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+
+  <header class="topbar">
+    <a class="logo" href="index.html"><img src="images/BANNER_GAZADA_RP.png" alt="GAZADA"></a>
+    <nav class="nav">
+      <a href="index.html">Inicio</a>
+      <a href="vips.html">VIPS</a>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <span class="kicker">CHECKOUT • GAZADA</span>
+    <h1>COMPRAS</h1>
+    <p class="sub">Seleciona o produto, preenche os teus dados e paga por MB WAY. Depois, abre ticket no Discord e cola o comprovativo.</p>
+
+    <div class="grid">
+      <section class="card">
+        <h3 style="margin:0 0 12px;">Dados do comprador</h3>
+
+        <div class="row">
+          <div>
+            <label>Nome</label>
+            <input id="buyer_name" placeholder="Ex: João Silva">
+          </div>
+          <div>
+            <label>Email</label>
+            <input id="buyer_email" placeholder="exemplo@email.com">
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label>Discord (opcional)</label>
+            <input id="buyer_discord" placeholder="ex: user#0000 / @user">
+          </div>
+          <div>
+            <label>ID / Nome no servidor</label>
+            <input id="buyer_server_id" placeholder="Ex: nome / 12345">
+          </div>
+        </div>
+
+        <h3 style="margin:16px 0 10px;">Produto</h3>
+
+        <div class="row">
+          <div>
+            <label>Selecionar</label>
+            <select id="productSelect"></select>
+          </div>
+          <div>
+            <label>Quantidade</label>
+            <input id="qty" type="number" min="1" value="1">
+          </div>
+        </div>
+
+        <button class="btn" id="payBtn">Pagar por MB WAY</button>
+
+        <div class="error" id="apiError">⚠️ Erro: não consegui carregar produtos.</div>
+        <div class="ok" id="okMsg"></div>
+
+        <div class="hint" id="payHint">
+          <b>Entrega:</b> após confirmação, o produto será entregue ao ID/nome indicado.<br>
+          Se houver problema, abre ticket no Discord.
+        </div>
+      </section>
+
+      <aside class="card">
+        <h3 style="margin:0 0 12px;">Resumo</h3>
+
+        <div class="line"><span>Produto</span><span id="sumName">—</span></div>
+        <div class="line"><span>Preço</span><span id="sumPrice">€0.00</span></div>
+        <div class="line"><span>Quantidade</span><span id="sumQty">1</span></div>
+        <div class="line"><span>Taxas</span><span>€0.00</span></div>
+
+        <div class="total">
+          <div style="color:var(--muted); font-size:12px;">TOTAL</div>
+          <div class="val" id="sumTotal">€0.00</div>
+        </div>
+
+        <div class="hint" id="mbwayBox">
+          A carregar config…
+        </div>
+      </aside>
+    </div>
+  </main>
+
+<script>
+  const apiError = document.getElementById("apiError");
+  const okMsg = document.getElementById("okMsg");
+
+  const productSelect = document.getElementById("productSelect");
+  const qtyEl = document.getElementById("qty");
+
+  const sumName = document.getElementById("sumName");
+  const sumPrice = document.getElementById("sumPrice");
+  const sumQty = document.getElementById("sumQty");
+  const sumTotal = document.getElementById("sumTotal");
+
+  const buyer_name = document.getElementById("buyer_name");
+  const buyer_email = document.getElementById("buyer_email");
+  const buyer_discord = document.getElementById("buyer_discord");
+  const buyer_server_id = document.getElementById("buyer_server_id");
+
+  const mbwayBox = document.getElementById("mbwayBox");
+
+  const eur = (n) => "€" + Number(n||0).toFixed(2);
+  const esc = (s) => String(s ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;");
+
+  let PRODUCTS = [];
+  let CONFIG = null;
+
+  function getQueryItem(){
+    const qs = new URLSearchParams(location.search);
+    return qs.get("item");
+  }
+
+  function renderSelect(){
+    productSelect.innerHTML = "";
+    for (const p of PRODUCTS){
+      const opt = document.createElement("option");
+      opt.value = p.id;
+      opt.textContent = `${p.name} (${eur(p.price)})`;
+      productSelect.appendChild(opt);
+    }
+  }
+
+  function getSelectedProduct(){
+    const id = productSelect.value;
+    return PRODUCTS.find(p => p.id === id) || null;
+  }
+
+  function updateSummary(){
+    const p = getSelectedProduct();
+    const q = Math.max(1, Number(qtyEl.value || 1));
+    qtyEl.value = String(q);
+
+    if (!p){
+      sumName.textContent = "—";
+      sumPrice.textContent = eur(0);
+      sumQty.textContent = String(q);
+      sumTotal.textContent = eur(0);
+      return;
+    }
+
+    sumName.textContent = p.name;
+    sumPrice.textContent = eur(p.price);
+    sumQty.textContent = String(q);
+    sumTotal.textContent = eur(p.price * q);
+  }
+
+  async function loadConfig(){
+    const r = await fetch("/api/public-config", { cache:"no-store" });
+    CONFIG = r.ok ? await r.json() : null;
+
+    const mb = CONFIG?.mbwayNumber ? `<span class="mono">${esc(CONFIG.mbwayNumber)}</span>` : "—";
+    const nm = CONFIG?.mbwayName ? esc(CONFIG.mbwayName) : "GAZADA RP";
+    const ticket = CONFIG?.discordTicketUrl ? CONFIG.discordTicketUrl : "https://discord.gg/";
+
+    mbwayBox.innerHTML = `
+      <b>MB WAY:</b> Paga para <b>${nm}</b> no número ${mb}.<br>
+      Depois abre ticket no Discord: <a style="color:#ffb3b3;" href="${ticket}">${ticket}</a>
+    `;
+  }
+
+  async function loadProducts(){
+    apiError.classList.remove("show");
+    const r = await fetch("/api/products", { cache:"no-store" });
+    if (!r.ok) throw new Error("API");
+    PRODUCTS = await r.json();
+    renderSelect();
+
+    const preferred = getQueryItem();
+    if (preferred && PRODUCTS.some(p => p.id === preferred)){
+      productSelect.value = preferred;
+    }
+    updateSummary();
+  }
+
+  productSelect.addEventListener("change", updateSummary);
+  qtyEl.addEventListener("input", updateSummary);
+
+  document.getElementById("payBtn").addEventListener("click", async () => {
+    okMsg.classList.remove("show");
+    okMsg.textContent = "";
+
+    const p = getSelectedProduct();
+    const q = Math.max(1, Number(qtyEl.value || 1));
+    if (!p){ alert("Seleciona um produto."); return; }
+
+    const total = p.price * q;
+
+    // cria pedido PENDING
+    const payload = {
+      item_id: p.id,
+      item_name: p.name,
+      qty: q,
+      total_eur: total,
+      buyer_name: buyer_name.value.trim(),
+      buyer_email: buyer_email.value.trim(),
+      buyer_discord: buyer_discord.value.trim(),
+      buyer_server_id: buyer_server_id.value.trim(),
+    };
+
+    try{
+      const r = await fetch("/api/orders", {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await r.json();
+      if (!r.ok) throw new Error(data?.error || "Erro");
+
+      const number = CONFIG?.mbwayNumber || "";
+      const name = CONFIG?.mbwayName || "GAZADA RP";
+      const ticket = CONFIG?.discordTicketUrl || "";
+
+      okMsg.textContent =
+`✅ Pedido criado: ${data.orderId}
+Total: ${eur(total)}
+MB WAY -> ${name} ${number ? "(" + number + ")" : ""}
+
+Depois abre ticket no Discord e envia o comprovativo.
+${ticket ? "Ticket: " + ticket : ""}`;
+      okMsg.classList.add("show");
+    }catch(e){
+      alert(e.message);
+    }
+  });
+
+  // boot
+  loadConfig().catch(()=>{});
+  loadProducts().catch(() => apiError.classList.add("show"));
+</script>
+</body>
+</html>

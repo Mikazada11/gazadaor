@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAZADA • Oficinal</title>
+    <link rel="icon" type="image/png" href="images/BANNER_GAZADA_RP.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        @font-face {
+            font-family: 'AnotherDanger';
+            src: url('fonts/AnotherDanger.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        :root {
+            --primary: #c00000;
+            --primary-glow: #ff2a2a;
+            --bg-dark: #000000;
+            --bg-panel: rgba(15, 15, 15, 0.95);
+            --text: #ffffff;
+            --muted: #cfcfcf;
+            --radius: 12px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg-dark); color: var(--text); overflow-x: hidden; }
+
+        /* --- NAVBAR MELHORADA --- */
+        .topbar {
+            position: fixed; top: 0; left: 0; width: 100%; height: 80px;
+            padding: 0 60px; display: flex; align-items: center; justify-content: space-between;
+            z-index: 1000; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .logo img { max-height: 140px; width: auto; transition: transform 0.3s ease; }
+        .logo:hover img { transform: scale(1.05); }
+
+        .nav ul { display: flex; gap: 30px; list-style: none; align-items: center; }
+        .nav a { 
+            text-decoration: none; color: #fff; font-weight: 500; font-size: 14px; 
+            transition: 0.3s; opacity: 0.8;
+        }
+        .nav a:hover { color: var(--primary-glow); opacity: 1; }
+
+        .nav-actions { display: flex; align-items: center; gap: 15px; }
+
+        /* Botão Login Estilizado */
+        .btn-login {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #fff; padding: 10px 24px; border-radius: 30px;
+            cursor: pointer; font-size: 13px; font-weight: 600; transition: 0.3s;
+        }
+        .btn-login:hover { background: #fff; color: #000; }
+
+        .btn-download {
+            padding: 10px 24px; background: var(--primary); color: #fff;
+            border-radius: 30px; text-decoration: none; font-size: 13px;
+            font-weight: 600; transition: 0.3s; border: 1px solid var(--primary);
+        }
+        .btn-download:hover { box-shadow: 0 0 20px rgba(192,0,0,0.5); transform: translateY(-2px); }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            position: relative; height: 100vh; overflow: hidden;
+            display: flex; align-items: center; justify-content: center; text-align: center;
+        }
+        .hero-video {
+            position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%;
+            transform: translate(-50%, -50%); object-fit: cover; z-index: 1;
+        }
+        .hero::after {
+            content: ""; position: absolute; inset: 0;
+            background: radial-gradient(circle, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.9) 100%);
+            z-index: 2;
+        }
+        .hero-content { position: relative; z-index: 3; max-width: 800px; padding: 20px; }
+        .hero-content h2 { font-family: 'AnotherDanger', sans-serif; font-size: 72px; color: var(--primary-glow); margin-bottom: 10px; text-shadow: 0 0 20px rgba(255,0,0,0.4); }
+
+        /* --- SISTEMA DE MODAL (LOGIN/REGISTO) --- */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(8px); z-index: 2000;
+            display: none; align-items: center; justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-card {
+            background: var(--bg-panel); width: 100%; max-width: 400px;
+            padding: 40px; border-radius: var(--radius); border: 1px solid rgba(192,0,0,0.3);
+            position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        .close-modal {
+            position: absolute; top: 20px; right: 20px; cursor: pointer;
+            font-size: 20px; opacity: 0.5; transition: 0.3s;
+        }
+        .close-modal:hover { opacity: 1; color: var(--primary-glow); }
+
+        .auth-tabs { display: flex; gap: 20px; margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .tab-btn {
+            padding-bottom: 10px; background: none; border: none; color: var(--muted);
+            cursor: pointer; font-weight: 600; font-size: 16px; position: relative;
+        }
+        .tab-btn.active { color: #fff; }
+        .tab-btn.active::after {
+            content: ""; position: absolute; bottom: -1px; left: 0; width: 100%;
+            height: 2px; background: var(--primary);
+        }
+
+        .auth-form { display: none; flex-direction: column; gap: 15px; }
+        .auth-form.active { display: flex; }
+
+        .input-group label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 5px; }
+        .input-group input {
+            width: 100%; padding: 12px 16px; background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; outline: none;
+        }
+        .input-group input:focus { border-color: var(--primary); }
+
+        .btn-auth {
+            background: var(--primary); color: #fff; border: none; padding: 14px;
+            border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 10px;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* RESPONSIVO */
+        @media (max-width: 900px) {
+            .topbar { padding: 0 20px; }
+            .nav ul { display: none; }
+            .hero-content h2 { font-size: 45px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="topbar">
+        <a href="index.html" class="logo">
+            <img src="images/BANNER_GAZADA_RP.png" alt="GAZADA">
+        </a>
+
+        <nav class="nav">
+            <ul>
+                <li><a href="#">Início</a></li>
+                <li><a href="sobre.html">Sobre</a></li>
+                <li><a href="vips.html">VIPS</a></li>
+            </ul>
+        </nav>
+
+        <div class="nav-actions">
+            <a href="login.php" class="btn-login">Entrar</a>
+            <a href="https://discord.gg/YrDsBnj2wb" class="btn-download">Discord</a>
+        </div>
+    </header>
+
+    <section class="hero">
+        <video class="hero-video" autoplay muted loop playsinline>
+            <source src="images/index.mp4" type="video/mp4">
+        </video>
+
+        <div class="hero-content">
+            <h2>GAZADA RP</h2>
+            <p style="letter-spacing: 2px; color: var(--muted); margin-bottom: 30px; font-weight: 300;">
+                BEM-VINDO AO WEBSITE OFICIAL DO NOSSO SERVIDOR
+            </p>
+            <a href="vips.html" class="btn-download" style="padding: 15px 40px; font-size: 15px;">ADQUIRIR VIPS</a>
+        </div>
+    </section>
+
+    <div class="modal-overlay" id="authModal">
+        <div class="modal-card">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            
+            <div class="auth-tabs">
+                <button class="tab-btn active" onclick="switchTab('login')">Login</button>
+                <button class="tab-btn" onclick="switchTab('register')">Registo</button>
+            </div>
+
+            <form id="loginForm" class="auth-form active">
+                <div class="input-group">
+                    <label>Utilizador ou Email</label>
+                    <input type="text" placeholder="admin@gazada.pt" required>
+                </div>
+                <div class="input-group">
+                    <label>Palavra-passe</label>
+                    <input type="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-auth">Entrar no Painel</button>
+                <p style="font-size: 11px; color: var(--muted); text-align: center; margin-top: 10px;">
+                    Esqueceu a sua senha? <a href="#" style="color: var(--primary);">Clique aqui</a>
+                </p>
+            </form>
+
+            <form id="registerForm" class="auth-form">
+                <div class="input-group">
+                    <label>Utilizador</label>
+                    <input type="text" placeholder="Ex: Player123" required>
+                </div>
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" placeholder="seu@email.pt" required>
+                </div>
+                <div class="input-group">
+                    <label>Palavra-passe</label>
+                    <input type="password" placeholder="Mínimo 8 caracteres" required>
+                </div>
+                <button type="submit" class="btn-auth">Criar Conta</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Funções do Modal
+        function openModal() {
+            document.getElementById('authModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden'; // Impede scroll
+        }
+
+        function closeModal() {
+            document.getElementById('authModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Trocar entre Login e Registo
+        function switchTab(type) {
+            const tabs = document.querySelectorAll('.tab-btn');
+            const forms = document.querySelectorAll('.auth-form');
+
+            tabs.forEach(t => t.classList.remove('active'));
+            forms.forEach(f => f.classList.remove('active'));
+
+            if (type === 'login') {
+                tabs[0].classList.add('active');
+                document.getElementById('loginForm').classList.add('active');
+            } else {
+                tabs[1].classList.add('active');
+                document.getElementById('registerForm').classList.add('active');
+            }
+        }
+
+        // Fechar modal ao clicar fora
+        window.onclick = function(event) {
+            const modal = document.getElementById('authModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>

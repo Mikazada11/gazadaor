@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GAZADA | Sobre</title>
+  <link rel="icon" type="image/png" href="images/BANNER_GAZADA_RP.png">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    @font-face {
+      font-family: 'AnotherDanger';
+      src: url('fonts/AnotherDanger.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    :root {
+      --primary: #ff0000;
+      --primary-dark: #8b0000;
+      --bg: #050505;
+      --card: rgba(255, 255, 255, 0.03);
+      --border: rgba(255, 255, 255, 0.08);
+      --text-main: #ffffff;
+      --text-dim: #a0a0a0;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+    
+    body { 
+      background: var(--bg); 
+      color: var(--text-main); 
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* ---------- NAVBAR ---------- */
+    .topbar {
+      position: fixed;
+      top: 0; width: 100%; height: 80px;
+      padding: 0 5%;
+      display: flex; align-items: center; justify-content: space-between;
+      z-index: 1000;
+      background: rgba(5, 5, 5, 0.8);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo img { height: 50px; width: auto; transition: transform 0.3s ease; }
+    .logo:hover img { transform: scale(1.05); }
+
+    .nav ul { display: flex; gap: 30px; list-style: none; align-items: center; }
+    .nav a {
+      text-decoration: none; color: var(--text-dim);
+      font-weight: 500; font-size: 14px;
+      transition: all 0.3s ease;
+    }
+    .nav a:hover, .nav a.active { color: var(--primary); }
+
+    .btn-discord {
+      padding: 10px 24px;
+      background: var(--primary);
+      color: #fff; border-radius: 8px;
+      text-decoration: none; font-size: 13px; font-weight: 700;
+      transition: 0.3s;
+    }
+    .btn-discord:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(255,0,0,0.3); }
+
+    /* ---------- HERO SECTION ---------- */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 120px 5% 60px;
+      background: radial-gradient(circle at top, rgba(255,0,0,0.15) 0%, transparent 50%);
+      text-align: center;
+    }
+
+    .hero-content { max-width: 800px; margin-bottom: 50px; }
+    .kicker { color: var(--primary); font-size: 12px; font-weight: 800; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 15px; display: block; }
+    
+    .hero h1 { 
+      font-family: 'AnotherDanger', sans-serif; 
+      font-size: clamp(40px, 8vw, 72px); 
+      line-height: 0.9; margin-bottom: 20px;
+      text-shadow: 0 0 20px rgba(255,0,0,0.2);
+    }
+    .hero p { color: var(--text-dim); font-size: 16px; max-width: 600px; margin: 0 auto; }
+
+    /* ---------- CENTRAL SLIDER ---------- */
+    .slider-container {
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+      position: relative;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #000;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+    }
+
+    .slider-main { position: relative; aspect-ratio: 16 / 9; width: 100%; }
+    
+    .slide {
+      position: absolute; inset: 0;
+      opacity: 0; visibility: hidden;
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .slide.active { opacity: 1; visibility: visible; }
+    
+    .slide img, .slide video { width: 100%; height: 100%; object-fit: cover; }
+
+    .slide-info {
+      position: absolute; bottom: 0; left: 0; width: 100%;
+      padding: 40px;
+      background: linear-gradient(transparent, rgba(0,0,0,0.9));
+      text-align: left;
+    }
+    .slide-info h3 { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+    .slide-info p { color: var(--text-dim); font-size: 14px; }
+
+    /* ---------- SLIDER CONTROLS ---------- */
+    .slider-nav {
+      position: absolute; top: 50%; width: 100%;
+      display: flex; justify-content: space-between;
+      padding: 0 20px; transform: translateY(-50%);
+      pointer-events: none; z-index: 10;
+    }
+    .nav-btn {
+      width: 50px; height: 50px; border-radius: 50%;
+      background: rgba(0,0,0,0.5); border: 1px solid var(--border);
+      color: #fff; cursor: pointer; pointer-events: auto;
+      display: grid; place-items: center; transition: 0.3s;
+      backdrop-filter: blur(5px);
+    }
+    .nav-btn:hover { background: var(--primary); border-color: var(--primary); }
+
+    .video-ui {
+      position: absolute; top: 20px; right: 20px;
+      display: flex; align-items: center; gap: 15px;
+      background: rgba(0,0,0,0.6); padding: 8px 15px;
+      border-radius: 12px; backdrop-filter: blur(8px);
+      border: 1px solid var(--border);
+    }
+    .volume-slider { width: 80px; height: 4px; accent-color: var(--primary); cursor: pointer; }
+
+    /* ---------- GRID SECTION ---------- */
+    .features { padding: 100px 5%; max-width: 1200px; margin: 0 auto; }
+    .features-grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+      gap: 25px; 
+    }
+    .feature-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 40px; border-radius: 20px;
+      transition: 0.3s;
+    }
+    .feature-card:hover { border-color: var(--primary); transform: translateY(-5px); background: rgba(255,255,255,0.05); }
+    .feature-card h4 { font-size: 20px; margin-bottom: 15px; color: var(--primary); }
+    .feature-card p { color: var(--text-dim); font-size: 15px; }
+
+    footer { padding: 50px; text-align: center; border-top: 1px solid var(--border); color: #555; font-size: 13px; }
+
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 50px; }
+      .nav ul { display: none; }
+      .slider-nav { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <a href="index.html" class="logo"><img src="images/BANNER_GAZADA_RP.png" alt="GAZADA"></a>
+    <nav class="nav">
+      <ul>
+        <li><a href="index.html">Início</a></li>
+        <li><a href="sobre.html" class="active">Sobre</a></li>
+        <li><a href="vips.html">VIPS</a></li>
+      </ul>
+    </nav>
+    <a href="https://discord.gg/YrDsBnj2wb" class="btn-discord">Discord</a>
+  </header>
+
+  <section class="hero">
+    <div class="hero-content">
+      <span class="kicker">Evolution Roleplay</span>
+      <h1>SOBRE NÓS</h1>
+      <p>Explora o que torna a nossa cidade única. Scripts exclusivos e uma comunidade que respira Roleplay de verdade.</p>
+    </div>
+
+    <div class="slider-container">
+      <div class="slider-nav">
+        <button class="nav-btn" onclick="changeSlide(-1)">❮</button>
+        <button class="nav-btn" onclick="changeSlide(1)">❯</button>
+      </div>
+
+      <div class="slider-main">
+        <div class="slide active" data-title="Experiência Imersiva">
+          <video src="images/index.mp4" loop playsinline preload="auto"></video>
+
+          <div class="slide-info">
+            <h3>BEM-VINDO À GAZADA</h3>
+            <p>Onde a sua história começa com qualidade e performance.</p>
+          </div>
+        </div>
+
+        <div class="slide" data-title="Comunidade Ativa">
+          <video src="images/Video Gazada RP TikTok.mp4" loop playsinline preload="auto"></video>
+                    <div class="video-ui">
+             <span id="volIcon">🔊</span>
+             <input type="range" class="volume-slider" min="0" max="1" step="0.05" value="0.1" oninput="updateVolume(this.value)">
+          </div>
+          <div class="slide-info">
+            <h3>A NOSSA CIDADE</h3>
+            <p>Momentos épicos capturados pelos nossos jogadores.</p>
+          </div>
+        </div>
+
+        <div class="slide" data-title="Customização">
+          <img src="images/music.png" alt="Editor">
+          <div class="slide-info">
+            <h3>EDITOR DA CIDADE</h3>
+            <p>Ferramentas exclusivas para uma imersão sem precedentes.</p>
+          </div>
+        </div>
+
+        <div class="slide" data-title="Veículos Exclusivos">
+          <img src="images/carros.png" alt="Carros">
+          <div class="slide-info">
+            <h3>CARROS GAZADA</h3>
+            <p>Handling realístico e modelos únicos no servidor.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="features-grid">
+      <div class="feature-card">
+        <h4>Performance</h4>
+        <p>Servidor otimizado para garantir que o seu FPS seja a última das suas preocupações.</p>
+      </div>
+      <div class="feature-card">
+        <h4>Suporte 24/7</h4>
+        <p>Equipa de staff dedicada pronta para ajudar em qualquer situação de ticket.</p>
+      </div>
+      <div class="feature-card">
+        <h4>Economia Real</h4>
+        <p>Sistema financeiro pensado para valorizar o esforço e o roleplay de cada cidadão.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    &copy; <span id="year"></span> GAZADA RP • Todos os direitos reservados.
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    let currentIdx = 0;
+    const slides = document.querySelectorAll('.slide');
+    let globalVolume = 0.1; // VOLUME INICIAL BAIXO (10%)
+
+    function updateVolume(val) {
+      globalVolume = val;
+      const activeVideo = slides[currentIdx].querySelector('video');
+      if (activeVideo) {
+        activeVideo.volume = globalVolume;
+        activeVideo.muted = (globalVolume == 0);
+      }
+      document.getElementById('volIcon').textContent = globalVolume == 0 ? "❌" : "🔊";
+    }
+
+    function changeSlide(dir) {
+      // Para o vídeo anterior
+      const oldVideo = slides[currentIdx].querySelector('video');
+      if (oldVideo) oldVideo.pause();
+
+      slides[currentIdx].classList.remove('active');
+      currentIdx = (currentIdx + dir + slides.length) % slides.length;
+      slides[currentIdx].classList.add('active');
+
+      // Inicia novo vídeo
+      const newVideo = slides[currentIdx].querySelector('video');
+      if (newVideo) {
+        newVideo.currentTime = 0;
+        newVideo.volume = globalVolume;
+        newVideo.muted = false; // Força som ao mudar
+        newVideo.play().catch(e => console.log("Autoplay bloqueado pelo browser"));
+      }
+    }
+
+    // Inicialização
+    window.addEventListener('load', () => {
+      const firstVideo = slides[0].querySelector('video');
+      if (firstVideo) {
+        firstVideo.volume = globalVolume;
+        firstVideo.muted = false;
+        firstVideo.play().catch(() => {
+          console.log("Clique na página para ativar o som.");
+          firstVideo.muted = true; // Fallback se o browser bloquear
+        });
+      }
+    });
+  </script>
+</body>
+</html>

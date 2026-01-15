@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GAZADA | VIPS</title>
+  <link rel="icon" type="image/png" href="images/BANNER_GAZADA_RP.png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    @font-face{
+      font-family:'AnotherDanger';
+      src:url('fonts/AnotherDanger.ttf') format('truetype');
+      font-weight:normal;
+      font-style:normal;
+    }
+    :root{
+      --primary:#c00000;
+      --primary-dark:#8f0000;
+      --text:#ffffff;
+      --muted:#cfcfcf;
+      --bg-dark:#000000;
+      --card:rgba(255,255,255,.06);
+      --stroke:rgba(255,255,255,.10);
+    }
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+    body{background:var(--bg-dark);color:var(--text);overflow-x:hidden;}
+
+    .topbar{
+      position:fixed;top:0;left:0;width:100%;height:72px;
+      padding:20px 60px;display:flex;align-items:center;justify-content:space-between;
+      z-index:1000;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);
+    }
+    .logo{display:flex;align-items:center;height:100%;margin-left:-50px;}
+    .logo img{max-height:160px;width:auto;object-fit:contain;}
+    .nav ul{display:flex;gap:26px;list-style:none;margin:0;padding:0;align-items:center;}
+    .nav a{
+      text-decoration:none;color:#fff;font-weight:500;font-size:14px;
+      position:relative;padding:5px 0;transition:color .3s ease;
+    }
+    .nav a::after{
+      content:"";position:absolute;left:0;bottom:-6px;width:0;height:2px;
+      background:var(--primary);transition:width .3s ease;
+    }
+    .nav a:hover{color:var(--primary);}
+    .nav a:hover::after{width:100%;}
+    .btn-download{
+      padding:10px 22px;border:1px solid var(--primary);color:var(--primary);
+      border-radius:30px;text-decoration:none;font-size:13px;transition:all .3s ease;
+    }
+    .btn-download:hover{
+      background:var(--primary);color:#fff;box-shadow:0 0 15px rgba(192,0,0,0.6);
+    }
+
+    .dropdown{position:relative;}
+    .dropbtn{
+      text-decoration:none;color:#fff;font-weight:600;display:flex;align-items:center;gap:8px;padding:6px 2px;
+    }
+    .caret{
+      width:10px;height:10px;border-right:2px solid #ff3b3b;border-bottom:2px solid #ff3b3b;
+      transform:rotate(45deg);opacity:0;transition:opacity .15s ease,transform .18s ease;
+    }
+    .dropdown-menu{
+      position:absolute;top:38px;left:50%;
+      transform:translateX(-50%) translateY(-8px);
+      min-width:210px;background:#fff;border-radius:14px;padding:12px;
+      box-shadow:0 18px 40px rgba(0,0,0,.35);
+      opacity:0;visibility:hidden;pointer-events:none;
+      transition:opacity .18s ease,transform .18s ease,visibility .18s ease;
+    }
+    .dropdown-menu a{
+      display:block;padding:10px 12px;border-radius:10px;color:#1a1a1a;text-decoration:none;font-weight:500;
+    }
+    .dropdown-menu a:hover{background:rgba(0,0,0,.06);}
+    .dropdown:hover .dropbtn{color:#ff3b3b;}
+    .dropdown:hover .caret{opacity:1;}
+    .dropdown:hover .dropdown-menu{
+      opacity:1;visibility:visible;pointer-events:auto;transform:translateX(-50%) translateY(0);
+    }
+
+    .page-hero{
+      height:100vh;padding:120px 20px 0;display:flex;align-items:center;justify-content:center;
+      text-align:center;position:relative;
+      background:
+        radial-gradient(800px 400px at 50% 20%, rgba(192,0,0,.30), rgba(0,0,0,0) 60%),
+        linear-gradient(rgba(0,0,0,.78), rgba(0,0,0,.86)),
+        url('vips-bg.jpg') center/cover no-repeat;
+    }
+    .blob{
+      position:absolute;width:380px;height:380px;border-radius:999px;filter:blur(60px);
+      opacity:.22;pointer-events:none;animation:floaty 7s ease-in-out infinite;background:rgba(192,0,0,.9);
+    }
+    .blob.b1{top:90px;left:-120px;}
+    .blob.b2{bottom:60px;right:-140px;animation-delay:1.2s;opacity:.18;}
+    @keyframes floaty{0%,100%{transform:translate(0,0);}50%{transform:translate(14px,-10px);} }
+
+    .wrap{width:min(1100px,100%);margin:0 auto;}
+    .kicker{display:inline-block;font-size:12px;letter-spacing:4px;color:var(--primary);margin-bottom:16px;}
+    .title{
+      font-family:'AnotherDanger',sans-serif;font-size:72px;color:#ff2a2a;letter-spacing:2px;line-height:1;
+      text-transform:uppercase;text-shadow:0 0 6px rgba(255,0,0,.45),0 0 16px rgba(255,0,0,.25);
+      margin-bottom:18px;
+    }
+    .subtitle{color:var(--muted);font-size:14px;line-height:1.9;max-width:720px;margin:0 auto 26px;}
+    .hero-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:6px;}
+    .btn{
+      padding:13px 26px;border-radius:999px;border:1px solid var(--stroke);
+      background:transparent;color:#fff;text-decoration:none;font-size:14px;
+      transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease,background .25s ease;
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    }
+    .btn.primary{border-color:var(--primary);color:var(--primary);}
+    .btn.primary:hover{background:var(--primary);color:#fff;box-shadow:0 0 22px rgba(192,0,0,.55);transform:translateY(-2px);}
+    .btn.ghost:hover{border-color:rgba(255,255,255,.25);transform:translateY(-2px);}
+
+    .section{
+      padding:70px 20px;border-top:1px solid rgba(255,255,255,.06);
+      background:radial-gradient(700px 240px at 50% 10%, rgba(192,0,0,.10), rgba(0,0,0,0) 60%);
+      text-align:center;
+    }
+    .section h2{font-size:18px;letter-spacing:.5px;margin-bottom:18px;}
+    .section p.lead{color:var(--muted);font-size:14px;line-height:1.9;margin:0 auto 26px;max-width:900px;}
+
+    .category-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(220px,1fr));
+      gap:22px;
+      justify-content:center;
+      align-items:stretch;
+      width:100%;
+      margin:0 auto;
+    }
+    .category-card{
+      background:var(--card);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:18px;
+      padding:22px;
+      box-shadow:0 18px 40px rgba(0,0,0,.25);
+      position:relative;overflow:hidden;
+      cursor:pointer;
+      transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease;
+      text-align:center;
+    }
+    .category-card:hover{transform:translateY(-6px);border-color:rgba(192,0,0,.55);box-shadow:0 22px 55px rgba(0,0,0,.35);}
+    .category-card.active{border-color:rgba(192,0,0,.85);box-shadow:0 0 0 1px rgba(192,0,0,.35),0 22px 55px rgba(0,0,0,.35);}
+    .category-title{
+      font-family:'AnotherDanger',sans-serif;
+      font-size:34px;color:#ff2a2a;letter-spacing:1px;line-height:1;text-transform:uppercase;
+      margin-bottom:10px;text-shadow:0 0 6px rgba(255,0,0,.35);
+    }
+    .category-desc{color:var(--muted);font-size:13px;line-height:1.85;margin:0 auto 14px;max-width:420px;}
+    .category-meta{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;color:rgba(255,255,255,.75);font-size:12px;}
+    .pill{border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.22);padding:6px 10px;border-radius:999px;}
+    .category-open{margin-top:16px;display:inline-flex;align-items:center;justify-content:center;gap:10px;color:var(--primary);font-weight:600;font-size:13px;}
+    .category-open .arrow{width:10px;height:10px;border-right:2px solid var(--primary);border-bottom:2px solid var(--primary);transform:rotate(-45deg);}
+
+    .panel{display:none;margin-top:26px;text-align:center;}
+    .panel.active{display:block;animation:panelIn .35s ease both;}
+    @keyframes panelIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);} }
+
+    .packs-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(240px,1fr));
+      gap:22px;
+      justify-content:center;
+      width:100%;
+      margin:0 auto;
+      text-align:center;
+      align-items:stretch;
+    }
+
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.35));
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:22px;
+      padding:20px;
+      box-shadow:0 18px 55px rgba(0,0,0,.35);
+      position:relative;overflow:hidden;
+      transform:translateY(10px);
+      opacity:0;
+      transition:transform .55s ease,opacity .55s ease,border-color .25s ease,box-shadow .25s ease;
+      text-align:center;
+      display:flex;
+      flex-direction:column;
+      height:100%;
+    }
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:-70px -70px auto auto;
+      width:220px;height:220px;
+      background:rgba(192,0,0,.35);
+      filter:blur(45px);
+      border-radius:999px;
+      opacity:0;
+      transition:opacity .3s ease;
+      pointer-events:none;
+    }
+    .card:hover{
+      transform:translateY(-8px);
+      border-color:rgba(192,0,0,.55);
+      box-shadow:0 26px 80px rgba(192,0,0,.18), 0 22px 65px rgba(0,0,0,.45);
+    }
+    .card:hover::before{opacity:.9;}
+    .card.reveal{transform:translateY(0);opacity:1;}
+
+    .category-thumb{
+      width:100%;
+      height:300px;
+      border-radius:16px;
+      overflow:hidden;
+      margin-bottom:14px;
+      position:relative;
+      background:
+        radial-gradient(circle at 50% 10%, rgba(192,0,0,.22), rgba(0,0,0,.92) 70%);
+      border:1px solid rgba(255,255,255,.08);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .category-thumb img{
+      max-width:100%;
+      max-height:100%;
+      width:auto;
+      height:auto;
+      object-fit:contain;
+      object-position:center;
+      display:block;
+      filter: drop-shadow(0 18px 25px rgba(0,0,0,.55));
+    }
+    .category-thumb::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(to top, rgba(0,0,0,.48), rgba(0,0,0,0));
+      pointer-events:none;
+    }
+
+    .vip-badge{
+      display:inline-flex;gap:8px;align-items:center;justify-content:center;
+      font-size:12px;padding:6px 12px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(0,0,0,.22);
+      color:#fff;margin:10px 0 12px;
+    }
+    .vip-badge strong{color:var(--primary);font-weight:700;}
+    .vip-name{font-size:20px;font-weight:800;margin-bottom:6px;}
+    .vip-desc{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.85;
+      margin:0 auto 14px;
+      max-width:520px;
+      min-height:52px;
+    }
+    .price{
+      display:flex;align-items:baseline;justify-content:center;gap:10px;
+      margin:14px 0 16px;
+    }
+    .price .val{font-size:30px;font-weight:900;letter-spacing:.3px;}
+    .price .per{font-size:12px;color:var(--muted);}
+
+    .features{
+      list-style:none;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin:0 0 18px;
+      align-items:stretch;
+      padding:0;
+      flex:1;
+      width:100%;
+      max-width:520px;
+      margin-left:auto;
+      margin-right:auto;
+    }
+    .features li{
+      width:100%;
+      display:grid;
+      grid-template-columns: 10px 1fr;
+      column-gap: 10px;
+      justify-content:start;
+      text-align:left;
+      align-items:start;
+      font-size:13px;
+      color:#eaeaea;
+      max-width:520px;
+      margin:0 auto;
+    }
+    .dot{
+      margin-top:7px;
+      width:7px;height:7px;border-radius:999px;background:var(--primary);
+      box-shadow:0 0 12px rgba(192,0,0,.55);
+      justify-self:start;
+    }
+
+    .card .cta{
+      display:flex;gap:10px;flex-wrap:wrap;justify-content:center;
+      margin-top:auto;
+    }
+    .mini{
+      padding:10px 14px;border-radius:999px;font-size:13px;text-decoration:none;
+      border:1px solid rgba(255,255,255,.14);
+      color:#fff;
+      transition:transform .25s ease,background .25s ease,border-color .25s ease,box-shadow .25s ease;
+    }
+    .mini:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.25);}
+    .mini.buy{border-color:var(--primary);color:var(--primary);}
+    .mini.buy:hover{background:var(--primary);color:#fff;box-shadow:0 0 18px rgba(192,0,0,.5);}
+
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:22px;justify-content:center;}
+    .stat{
+      padding:16px;border-radius:16px;border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.04);
+      transform:translateY(10px);opacity:0;transition:transform .55s ease,opacity .55s ease;text-align:center;
+    }
+    .stat.reveal{transform:translateY(0);opacity:1;}
+    .stat .num{font-family:'AnotherDanger',sans-serif;font-size:34px;color:#ff2a2a;letter-spacing:1px;line-height:1;}
+    .stat .lbl{margin-top:6px;color:var(--muted);font-size:12px;letter-spacing:1px;text-transform:uppercase;}
+
+    .faq{display:grid;grid-template-columns:1fr 1fr;gap:14px;justify-content:center;width:100%;margin:0 auto;text-align:center;}
+    details{
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.04);
+      border-radius:16px;
+      padding:14px 14px;
+      transform:translateY(10px);
+      opacity:0;
+      transition:transform .55s ease,opacity .55s ease,border-color .25s ease;
+      text-align:center;
+    }
+    details.reveal{transform:translateY(0);opacity:1;}
+    details[open]{border-color:rgba(192,0,0,.55);}
+    summary{cursor:pointer;font-weight:700;list-style:none;}
+    summary::-webkit-details-marker{display:none;}
+    details p{margin-top:10px;color:var(--muted);font-size:13px;line-height:1.85;text-align:center;}
+
+    footer{
+      padding:26px 20px;color:rgba(255,255,255,.65);
+      border-top:1px solid rgba(255,255,255,.06);
+      text-align:center;font-size:12px;
+    }
+
+    @media (max-width:1200px){
+      .category-grid{grid-template-columns:repeat(2,1fr);}
+      .packs-grid{grid-template-columns:repeat(2,1fr);}
+    }
+    @media (max-width:1000px){
+      .stats{grid-template-columns:1fr 1fr;}
+      .faq{grid-template-columns:1fr;}
+      .title{font-size:56px;}
+      .topbar{padding:20px 30px;}
+      .category-thumb{height:280px;}
+    }
+    @media (max-width:600px){
+      .nav ul{display:none;}
+      .title{font-size:44px;}
+      .stats{grid-template-columns:1fr;}
+      .category-grid{grid-template-columns:1fr;}
+      .packs-grid{grid-template-columns:1fr;}
+      .category-thumb{height:320px;}
+    }
+
+    .api-hint{
+      margin-top:12px;
+      color:rgba(255,255,255,.75);
+      font-size:12px;
+      display:none;
+    }
+    .api-hint.show{display:block;}
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <a href="index.html" class="logo">
+      <img src="images/BANNER_GAZADA_RP.png" alt="GAZADA">
+    </a>
+
+    <nav class="nav">
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="sobre.html">Sobre</a></li>
+        <li class="dropdown">
+          <a href="vips.html" class="dropbtn">VIPS <span class="caret"></span></a>
+          <div class="dropdown-menu">
+            <a href="#vips">Coins</a>
+            <a href="#vips">Vips mensais</a>
+            <a href="#vips">Vips exclusivos</a>
+            <a href="#vips">Extras</a>
+          </div>
+        </li>
+      </ul>
+    </nav>
+    <a href="https://discord.gg/YrDsBnj2wb" class="btn-download">Discord</a>
+  </header>
+
+  <section class="page-hero">
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="wrap">
+      <span class="kicker">VIPS • GAZADA</span>
+      <h1 class="title">VIPS</h1>
+      <p class="subtitle">Escolhe o teu VIP e desbloqueia vantagens no servidor.</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="#vips">Ver Categorias</a>
+        <a class="btn ghost" href="#faq">Perguntas Frequentes</a>
+      </div>
+      <div class="stats">
+        <div class="stat" data-count="250">
+          <div class="num"><span class="count">0</span>+</div>
+          <div class="lbl">VIPs adquiridos</div>
+        </div>
+        <div class="stat" data-count="24">
+          <div class="num"><span class="count">0</span>h</div>
+          <div class="lbl">Entrega</div>
+        </div>
+        <div class="stat" data-count="4">
+          <div class="num"><span class="count">0</span></div>
+          <div class="lbl">Pacotes</div>
+        </div>
+        <div class="stat" data-count="5">
+          <div class="num"><span class="count">0</span>★</div>
+          <div class="lbl">Suporte</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="vips">
+    <div class="wrap">
+      <h2>VIPS</h2>
+      <p class="lead">Escolhe uma categoria para ver as opções.</p>
+      <div class="category-grid" id="categoryGrid">
+        <div class="category-card" data-target="panel-coins">
+          <div class="category-title">COINS</div>
+          <div class="category-desc">Compra coins para itens e carros VIPs.</div>
+          <div class="category-meta"><span class="pill"><span id="pillCoins">0</span> opções</span></div>
+          <div class="category-open">Ver opções <span class="arrow"></span></div>
+        </div>
+        <div class="category-card" data-target="panel-mensais">
+          <div class="category-title">MENSAIS</div>
+          <div class="category-desc">Vantagens durante 30 dias.</div>
+          <div class="category-meta"><span class="pill"><span id="pillMensais">0</span> opções</span></div>
+          <div class="category-open">Ver opções <span class="arrow"></span></div>
+        </div>
+        <div class="category-card" data-target="panel-exclusivos">
+          <div class="category-title">EXCLUSIVOS</div>
+          <div class="category-desc">Pack único e exclusivo do servidor.</div>
+          <div class="category-meta"><span class="pill"><span id="pillExclusivos">0</span> opções</span></div>
+          <div class="category-open">Ver opções <span class="arrow"></span></div>
+        </div>
+        <div class="category-card" data-target="panel-extras">
+          <div class="category-title">EXTRAS</div>
+          <div class="category-desc">Extras para complementar VIP.</div>
+          <div class="category-meta"><span class="pill"><span id="pillExtras">0</span> opções</span></div>
+          <div class="category-open">Ver opções <span class="arrow"></span></div>
+        </div>
+      </div>
+
+      <div class="api-hint" id="apiHint">⚠️ Erro ao carregar os produtos. Verifica se o ficheiro produtos1.json está no local correto.</div>
+
+      <div class="panel" id="panel-coins">
+        <h2 style="margin-top:18px;">Coins</h2>
+        <div class="packs-grid" id="gridCoins"></div>
+      </div>
+      <div class="panel" id="panel-mensais">
+        <h2 style="margin-top:18px;">VIPs Mensais</h2>
+        <div class="packs-grid" id="gridMensais"></div>
+      </div>
+      <div class="panel" id="panel-exclusivos">
+        <h2 style="margin-top:18px;">VIPs Exclusivos</h2>
+        <div class="packs-grid" id="gridExclusivos"></div>
+      </div>
+      <div class="panel" id="panel-extras">
+        <h2 style="margin-top:18px;">Extras</h2>
+        <div class="packs-grid" id="gridExtras"></div>
+      </div>
+    </div>
+  </section>
+
+
+  <footer>© <span id="year"></span> GAZADA • VIPS</footer>
+
+<script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add("reveal"); });
+    }, { threshold: 0.15 });
+
+    function setupPanels() {
+      const cards = document.querySelectorAll(".category-card");
+      const panels = document.querySelectorAll(".panel");
+      cards.forEach(card => {
+        card.onclick = () => {
+          const targetId = card.getAttribute("data-target");
+          panels.forEach(p => p.classList.remove("active"));
+          cards.forEach(c => c.classList.remove("active"));
+          document.getElementById(targetId).classList.add("active");
+          card.classList.add("active");
+        };
+      });
+    }
+
+    async function loadProducts() {
+      const apiHint = document.getElementById("apiHint");
+      try {
+        // Adicionamos um parâmetro aleatório para evitar que o navegador use uma versão antiga (cache)
+        const response = await fetch("produtos1.json?v=" + Date.now());
+        if (!response.ok) throw new Error("Erro de rede ao carregar produtos1.json");
+        const items = await response.json();
+
+        const grids = {
+          coins: document.getElementById("gridCoins"),
+          vip_mensal: document.getElementById("gridMensais"),
+          vip_exclusivo: document.getElementById("gridExclusivos"),
+          extras: document.getElementById("gridExtras")
+        };
+
+        // Limpar os grids
+        Object.values(grids).forEach(grid => { if(grid) grid.innerHTML = ""; });
+
+        const counts = { coins: 0, vip_mensal: 0, vip_exclusivo: 0, extras: 0 };
+
+        items.forEach(p => {
+          const card = document.createElement("div");
+          card.className = "card reveal";
+          
+          // Preço formatado
+          const valorMoeda = p.price_coins || 0;
+          const precoDinheiro = new Intl.NumberFormat('pt-PT', { 
+            style: 'currency', 
+            currency: 'EUR' 
+          }).format(valorMoeda);
+
+          const periodo = p.category === "vip_mensal" ? "/ mês" : "Único";
+          
+          // CORREÇÃO AQUI: Usamos p.features como fallback para a descrição
+          // e tratamos as features para não dar erro se estiverem vazias
+          const listaFeatures = (p.features || "Vantagens exclusivas")
+            .split('\n')
+            .filter(f => f.trim() !== "")
+            .map(f => `<li><span class="dot"></span>${f}</li>`)
+            .join('');
+
+          card.innerHTML = `
+            <div class="category-thumb">
+              <img src="${p.image}" onerror="this.src='images/BANNER_GAZADA_RP.png'">
+            </div>
+            <div class="vip-name">${p.name}</div>
+            <div class="vip-desc">Item Oficial GAZADA RP</div>
+            <div class="price">
+              <div class="val">${precoDinheiro}</div>
+              <div class="per">${periodo}</div>
+            </div>
+            <ul class="features">
+              ${listaFeatures}
+            </ul>
+            <div class="cta">
+              <a class="mini buy" href="login.php">Adquirir</a>
+            </div>
+          `;
+
+          if (grids[p.category]) {
+            grids[p.category].appendChild(card);
+            counts[p.category]++;
+          }
+        });
+
+        // Atualiza contadores
+        if(document.getElementById("pillCoins")) document.getElementById("pillCoins").textContent = counts.coins;
+        if(document.getElementById("pillMensais")) document.getElementById("pillMensais").textContent = counts.vip_mensal;
+        if(document.getElementById("pillExclusivos")) document.getElementById("pillExclusivos").textContent = counts.vip_exclusivo;
+        if(document.getElementById("pillExtras")) document.getElementById("pillExtras").textContent = counts.extras;
+
+        apiHint.style.display = "none";
+
+      } catch (e) {
+        apiHint.style.display = "block";
+        apiHint.textContent = "⚠️ Erro ao carregar produtos. Limpa o cache do navegador.";
+        console.error(e);
+      }
+    }
+
+    setupPanels();
+    loadProducts();
+</script>
+</body>
+</html>
